@@ -1,0 +1,31 @@
+Rk,Team,TeamFullName,Conf,Div,W,L,W/L%
+1,BOS,Boston Celtics,E,A,57,25,0.695
+2,CLE,Cleveland Cavaliers,E,C,51,31,0.622
+3,PHI,Philadelphia 76ers,E,A,54,28,0.659
+4,MEM,Memphis Grizzlies,W,SW,51,31,0.622
+5,MIL,Milwaukee Bucks,E,C,58,24,0.707
+6,NYK,New York Knicks,E,A,47,35,0.573
+7,DEN,Denver Nuggets,W,NW,53,29,0.646
+8,SAC,Sacramento Kings,W,P,48,34,0.585
+9,PHX,Phoenix Suns,W,P,45,37,0.549
+10,TOR,Toronto Raptors,E,A,41,41,0.5
+11,NOP,New Orleans Pelicans,W,SW,42,40,0.512
+12,GSW,Golden State Warriors,W,P,44,38,0.537
+13,CHI,Chicago Bulls,E,C,40,42,0.488
+14,BKN,Brooklyn Nets,E,A,45,37,0.549
+15,OKC,Oklahoma City Thunder,W,NW,40,42,0.488
+16,LAL,Los Angeles Lakers,W,P,43,39,0.524
+17,ATL,Atlanta Hawks,E,SE,41,41,0.5
+18,LAC,Los Angeles Clippers,W,P,44,38,0.537
+19,DAL,Dallas Mavericks,W,SW,38,44,0.463
+20,MIN,Minnesota Timberwolves,W,NW,42,40,0.512
+21,MIA,Miami Heat,E,SE,44,38,0.537
+22,UTA,Utah Jazz,W,NW,37,45,0.451
+23,WAS,Washington Wizards,E,SE,35,47,0.427
+24,ORL,Orlando Magic,E,SE,34,48,0.415
+25,IND,Indiana Pacers,E,C,35,47,0.427
+26,POR,Portland Trail Blazers,W,NW,33,49,0.402
+27,CHA,Charlotte Hornets,E,SE,27,55,0.329
+28,HOU,Houston Rockets,W,SW,22,60,0.268
+29,DET,Detroit Pistons,E,C,17,65,0.207
+30,SAS,San Antonio Spurs,W,SW,22,60,0.268
