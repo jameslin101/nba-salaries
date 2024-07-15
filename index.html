@@ -3,62 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NBA Salary Visualization</title>
+    <title>NBA Salary Visualization (2022-2023 Season)</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f0f0f0;
         }
-        #visualization {
-            background-color: white;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        #navigation, #back-button {
+            margin-bottom: 20px;
         }
-        button {
-            padding: 10px 15px;
-            margin: 10px 0;
-            font-size: 16px;
-            cursor: pointer;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            transition: background-color 0.3s;
+        #navigation button, #back-button button {
+            margin-right: 10px;
+            padding: 5px 10px;
         }
-        button:hover {
-            background-color: #45a049;
+        .chart-container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
         }
         .tooltip {
             position: absolute;
-            text-align: left;
-            padding: 8px;
-            font: 12px sans-serif;
-            background: white;
+            background-color: white;
             border: 1px solid #ddd;
-            border-radius: 8px;
+            padding: 10px;
+            border-radius: 5px;
             pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s;
-            box-shadow: 0 0 5px rgba(0,0,0,0.1);
         }
-        .bar:hover {
-            opacity: 0.8;
-        }
+        /* Remove the display: none; from #pie-chart */
+        /*#pie-chart {
+            display: none;
+        }*/
     </style>
 </head>
 <body>
     <h1>NBA Salary Visualization (2022-2023 Season)</h1>
+    
     <div id="navigation">
         <button id="scene1">Team Salaries</button>
         <button id="scene2">Salary vs Performance</button>
         <button id="scene3">Player Salaries</button>
         <button id="scene4">Team Salary Distribution</button>
     </div>
-    <div id="visualization"></div>
+    
+    <div id="back-button" style="display: none;">
+        <button id="back-to-salaries">Back to Team Salaries</button>
+    </div>
+
+    <div class="chart-container">
+        <div id="bar-chart"></div>
+        <div id="pie-chart"></div>
+    </div>
 
     <script type="module" src="script.js"></script>
 </body>
