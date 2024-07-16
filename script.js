@@ -204,16 +204,29 @@ function renderTeamSalaries() {
             .attr("height", 0)
             .remove();
 
-        svg.select(".salary-cap-line")
-            .transition()
-            .duration(750)
-            .attr("y1", y(salaryCap))
-            .attr("y2", y(salaryCap));
+        // Remove existing salary cap line and text
+        svg.select(".salary-cap-line").remove();
+        svg.select(".salary-cap-text").remove();
 
-        svg.select(".salary-cap-text")
-            .transition()
-            .duration(750)
-            .attr("y", y(salaryCap));
+        // Add salary cap line
+        svg.append("line")
+            .attr("class", "salary-cap-line")
+            .attr("x1", 0)
+            .attr("x2", width)
+            .attr("y1", y(salaryCap))
+            .attr("y2", y(salaryCap))
+            .attr("stroke", "red")
+            .attr("stroke-dasharray", "5,5");
+
+        // Add salary cap text
+        svg.append("text")
+            .attr("class", "salary-cap-text")
+            .attr("x", width)
+            .attr("y", y(salaryCap))
+            .attr("dy", "-0.5em")
+            .attr("text-anchor", "end")
+            .attr("fill", "red")
+            .text("Salary Cap: $123.655M");
 
         svg.select(".chart-title")
             .text(`NBA Team Salaries (2022-2023 Season) - Sorted by ${sortBySalary ? "Salary" : "Win %"}`);
@@ -254,21 +267,6 @@ function renderTeamSalaries() {
         .style("font-size", "16px")
         .style("text-decoration", "underline");
 
-    svg.append("line")
-        .attr("class", "salary-cap-line")
-        .attr("x1", 0)
-        .attr("x2", width)
-        .attr("stroke", "red")
-        .attr("stroke-dasharray", "5,5");
-
-    svg.append("text")
-        .attr("class", "salary-cap-text")
-        .attr("x", width)
-        .attr("dy", "-0.5em")
-        .attr("text-anchor", "end")
-        .attr("fill", "red")
-        .text("Salary Cap: $123.655M");
-
     const toggleButton = d3.select("#bar-chart")
         .append("button")
         .text("Sort by " + (sortBySalary ? "Win %" : "Salary"))
@@ -282,7 +280,6 @@ function renderTeamSalaries() {
     console.log("Finished rendering team salaries");
 }
 
-
 function renderPieChart(teamData) {
     console.log("Rendering pie chart for:", teamData);
     if (!teamData || !teamData.players) {
@@ -292,7 +289,7 @@ function renderPieChart(teamData) {
 
     d3.select("#pie-chart").html("");
 
-    const width = 600;
+    const width = 800;
     const height = 600;
     const radius = Math.min(width, height) / 2;
 
@@ -332,7 +329,7 @@ function renderPieChart(teamData) {
         .attr("dy", ".35em")
         .text(d => {
             const percentage = ((d.data.Salary / teamData.totalSalary) * 100).toFixed(1);
-            return percentage > 3 ? `${d.data['Player Name'].split(' ').pop()} (${percentage}%)` : '';
+            return percentage > 3 ? `${d.data['Player Name']} (${percentage}%)` : '';
         })
         .style("text-anchor", "middle")
         .style("font-size", "12px")
