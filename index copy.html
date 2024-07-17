@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NBA Salary Visualization (2022-2023 Season)</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script type="module" src="main.js"></script>
-    <script type="module" src="script.js"></script>
-    <script type="module" src="scene1.js"></script>    
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -34,27 +31,31 @@
             border-radius: 5px;
             pointer-events: none;
         }
+        /* Remove the display: none; from #pie-chart */
+        /*#pie-chart {
+            display: none;
+        }*/
     </style>
 </head>
 <body>
-    <h1 id="nba-salary-visualization-2022-2023-season" style="text-align: center;">NBA Salary Visualization (2022-2023 Season)</h1>
-
-    <div id="navigation" style="text-align: center; display: flex; justify-content: center; gap: 10px;">
+    <h1>NBA Salary Visualization (2022-2023 Season)</h1>
+    
+    <div id="navigation">
         <button id="scene1">Team Salaries</button>
         <button id="scene2">Salary vs Performance</button>
         <button id="scene3">Player Salaries</button>
         <button id="scene4">Team Salary Distribution</button>
     </div>
-    <br>
-    <div style="text-align: center;" class="chart-container">
+    
+    <div id="back-button" style="display: none;">
+        <button id="back-to-salaries">Back to Team Salaries</button>
+    </div>
+
+    <div class="chart-container">
         <div id="bar-chart"></div>
         <div id="pie-chart"></div>
     </div>
 
-    <div id="back-button" style="display: none; text-align: center; padding-top: 20px;">
-        <button id="back-to-salaries">Back to Team Salaries</button>
-    </div>
-
-    <script type="module" src="main.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
