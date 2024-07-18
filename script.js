@@ -1,5 +1,7 @@
 import { renderTeamSalaries } from './scene1.js';
 import { renderSalaryVsPerformance } from './scene2.js';
+import { renderPlayerSalariesVsPER } from './scene3.js';
+
 import { setCurrentScene, data, rankingsData } from './main.js';
 
 function processData(csvData, rankingsData) {
@@ -58,7 +60,8 @@ function showScene(sceneNumber, teamData = null) {
             renderSalaryVsPerformance();
             break;
         case 3:
-            // Implement Player Salaries vs PER scene
+            d3.select("#bar-chart").style("display", "block");
+            renderPlayerSalariesVsPER();
             break;
         case 4:
             // Implement Team Salary Distribution scene
