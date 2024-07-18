@@ -1,8 +1,6 @@
 import { data, colors } from './main.js';
 import { showScene } from './script.js';
 
-let sortBySalary = true; // Local to this module
-
 export function renderTeamSalaries() {
     console.log("Rendering team salaries");
     if (!data || !data.teams || data.teams.length === 0) {
@@ -45,9 +43,7 @@ export function renderTeamSalaries() {
     const salaryCap = 123.655;
 
     function updateChart() {
-        data.teams.sort((a, b) => sortBySalary ? 
-            b.totalSalary - a.totalSalary : 
-            b.winPercentage - a.winPercentage);
+        data.teams.sort((a, b) => b.totalSalary - a.totalSalary);
 
         x.domain(data.teams.map(d => d.team));
         y.domain([0, d3.max(data.teams, d => d.totalSalary / 1000000)]);
@@ -131,10 +127,10 @@ export function renderTeamSalaries() {
             .text("Salary Cap: $123.655M");
 
         svg.select(".chart-title")
-            .text(`NBA Team Salaries (2022-2023 Season) - Sorted by ${sortBySalary ? "Salary" : "Win %"}`);
+            .text("NBA Team Salaries (2022-2023 Season) - Sorted by Salary");
 
         svg.select(".x-axis-label")
-            .text(`Teams Ranked by ${sortBySalary ? "Salary" : "Win %"}`);
+            .text("Teams Ranked by Salary");
     }
 
     function updateTooltipContent(d) {
@@ -143,7 +139,7 @@ export function renderTeamSalaries() {
             Power Ranking: ${d.rank}<br/>
             Wins: ${d.wins}<br/>
             Losses: ${d.losses}<br/>
-            Win %: ${d.winPercentage}<br/>
+            Win %: ${(d.winPercentage * 100).toFixed(1)}%<br/>
             Total Salary: $${(d.totalSalary / 1000000).toFixed(2)}M
         `);
     }
@@ -168,17 +164,6 @@ export function renderTeamSalaries() {
         .attr("text-anchor", "middle")
         .style("font-size", "16px")
         .style("text-decoration", "underline");
-
-    const toggleButton = d3.select("#bar-chart")
-        .append("div")
-        .style("text-align", "center")
-        .append("button")
-        .text("Sort by " + (sortBySalary ? "Win %" : "Salary"))
-        .on("click", function() {
-            sortBySalary = !sortBySalary;
-            d3.select(this).text("Sort by " + (sortBySalary ? "Win %" : "Salary"));
-            updateChart();
-        });
 
     updateChart();
 

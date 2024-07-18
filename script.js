@@ -1,4 +1,5 @@
 import { renderTeamSalaries } from './scene1.js';
+import { renderSalaryVsPerformance } from './scene2.js';
 import { setCurrentScene, data, rankingsData } from './main.js';
 
 function processData(csvData, rankingsData) {
@@ -39,23 +40,22 @@ function processData(csvData, rankingsData) {
 
 function showScene(sceneNumber, teamData = null) {
     console.log("Showing scene:", sceneNumber);
-    setCurrentScene(sceneNumber);  // Use the setter function
+    setCurrentScene(sceneNumber);
     d3.select("#bar-chart").html("");
     d3.select("#pie-chart").html("");
     
     d3.select("#bar-chart").style("display", "none");
     d3.select("#pie-chart").style("display", "none");
-    d3.select("#navigation").style("display", "none");
     d3.select("#back-button").style("display", "none");
 
     switch(sceneNumber) {
         case 1:
             d3.select("#bar-chart").style("display", "block");
-            d3.select("#navigation").style("display", "block");
             renderTeamSalaries();
             break;
         case 2:
-            // Implement Team Salary vs Performance scene
+            d3.select("#bar-chart").style("display", "block");
+            renderSalaryVsPerformance();
             break;
         case 3:
             // Implement Player Salaries vs PER scene

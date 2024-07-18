@@ -6,12 +6,9 @@ let currentScene = 1;
 let data;
 let rankingsData;
 
-// Add event listeners to buttons
-document.getElementById('scene1').addEventListener('click', () => showScene(1));
-document.getElementById('scene2').addEventListener('click', () => showScene(2));
-document.getElementById('scene3').addEventListener('click', () => showScene(3));
-document.getElementById('scene4').addEventListener('click', () => showScene(4));
-document.getElementById('back-to-salaries').addEventListener('click', () => showScene(1));
+function setCurrentScene(newScene) {
+    currentScene = newScene;
+}
 
 // Load and process the data
 Promise.all([
@@ -27,10 +24,13 @@ Promise.all([
     console.log("Error loading the CSV files:", error);
 });
 
-function setCurrentScene(newScene) {
-    currentScene = newScene;
-}
+// Add event listeners to buttons
+document.addEventListener('DOMContentLoaded', (event) => {
+    document.getElementById('scene1').addEventListener('click', () => showScene(1));
+    document.getElementById('scene2').addEventListener('click', () => showScene(2));
+    document.getElementById('scene3').addEventListener('click', () => showScene(3));
+    document.getElementById('scene4').addEventListener('click', () => showScene(4));
+    document.getElementById('back-to-salaries').addEventListener('click', () => showScene(1));
+});
 
-// Export global variables and data
 export { currentScene, setCurrentScene, data, rankingsData, colors };
-
