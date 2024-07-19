@@ -68,7 +68,14 @@ export function renderPlayerSalariesVsPER() {
             .attr("cx", d => x(d.Salary / 1000000))
             .attr("cy", d => y(d.PER))
             .attr("r", 5)
-            .attr("fill", d => colors[d.Team].colors[colors[d.Team].mainColor].hex)
+            .attr("fill", d => {
+                const teamColors = colors[d.Team];
+                if (teamColors && teamColors.colors && teamColors.colors[teamColors.mainColor]) {
+                    return teamColors.colors[teamColors.mainColor].hex;
+                }
+                // Fallback color if the team or color is not found
+                return "#888888";
+            })
             .style("opacity", d => teamVisibility[d.Team] ? 1 : 0.1)
             .on("click", function(event, d) {
                 if (!teamVisibility[d.Team]) {
@@ -78,24 +85,92 @@ export function renderPlayerSalariesVsPER() {
                 }
             })
             .on("mouseover", function(event, d) {
-                // Remove the condition to show tooltip for all dots
+                console.log("Player data:", d);  // Keep this line for debugging
                 tooltip.transition()
                     .duration(200)
                     .style("opacity", .9);
                 tooltip.html(`
-                    Name: ${d['Player Name']}<br/>
-                    Position: ${d.Position}<br/>
-                    PER: ${d.PER.toFixed(2)}<br/>
-                    Salary: $${(d.Salary / 1000000).toFixed(2)}M
+                    <table class="tooltip-table">
+                        <tr class="header-row">
+                            <th colspan="2">${d['Player Name']} - ${d.Team}</th>
+                        </tr>
+                        <tr>
+                            <td>Position</td>
+                            <td>${d.Position}</td>
+                        </tr>
+                        <tr>
+                            <td>Age</td>
+                            <td>${d.Age}</td>
+                        </tr>
+                        <tr>
+                            <td>Salary</td>
+                            <td>$${(d.Salary / 1000000).toFixed(2)}M</td>
+                        </tr>
+                        <tr>
+                            <td>PER</td>
+                            <td>${typeof d.PER === 'number' ? d.PER.toFixed(2) : 'N/A'}</td>
+                        </tr>
+                        <tr>
+                            <td>Games Played</td>
+                            <td>${d.GP}</td>
+                        </tr>
+                        <tr>
+                            <td>Games Started</td>
+                            <td>${d.GS}</td>
+                        </tr>
+                        <tr>
+                            <td>Minutes Per Game</td>
+                            <td>${typeof d.MP === 'number' ? d.MP.toFixed(1) : 'N/A'}</td>
+                        </tr>
+                        <tr>
+                            <td>Points</td>
+                            <td>${typeof d.PTS === 'number' ? d.PTS.toFixed(1) : 'N/A'}</td>
+                        </tr>
+                        <tr>
+                            <td>Rebounds</td>
+                            <td>${typeof d.TRB === 'number' ? d.TRB.toFixed(1) : 'N/A'}</td>
+                        </tr>
+                        <tr>
+                            <td>Assists</td>
+                            <td>${typeof d.AST === 'number' ? d.AST.toFixed(1) : 'N/A'}</td>
+                        </tr>
+                        <tr>
+                            <td>Steals</td>
+                            <td>${typeof d.STL === 'number' ? d.STL.toFixed(1) : 'N/A'}</td>
+                        </tr>
+                        <tr>
+                            <td>Blocks</td>
+                            <td>${typeof d.BLK === 'number' ? d.BLK.toFixed(1) : 'N/A'}</td>
+                        </tr>
+                        <tr>
+                            <td>Field Goal %</td>
+                            <td>${typeof d['FG%'] === 'number' ? (d['FG%'] * 100).toFixed(1) : 'N/A'}%</td>
+                        </tr>
+                        <tr>
+                            <td>3 Point %</td>
+                            <td>${typeof d['3P%'] === 'number' ? (d['3P%'] * 100).toFixed(1) : 'N/A'}%</td>
+                        </tr>
+                        <tr>
+                            <td>True Shooting %</td>
+                            <td>${typeof d['TS%'] === 'number' ? (d['TS%'] * 100).toFixed(1) : 'N/A'}%</td>
+                        </tr>
+                        <tr>
+                            <td>Win Share</td>
+                            <td>${typeof d.WS === 'number' ? d.WS.toFixed(1) : 'N/A'}</td>
+                        </tr>
+                        <tr>
+                            <td>Box Plus Minus</td>
+                            <td>${typeof d.BPM === 'number' ? d.BPM.toFixed(1) : 'N/A'}</td>
+                        </tr>
+                        <tr>
+                            <td>Value Over Replacement</td>
+                            <td>${typeof d.VORP === 'number' ? d.VORP.toFixed(1) : 'N/A'}</td>
+                        </tr>
+                    </table>
                 `)
                 .style("left", (event.pageX + 10) + "px")
                 .style("top", (event.pageY - 10) + "px");
             })
-            .on("mouseout", function(d) {
-                tooltip.transition()
-                    .duration(500)
-                    .style("opacity", 0);
-            });
 
         dots.exit().remove();
 
@@ -134,41 +209,52 @@ export function renderPlayerSalariesVsPER() {
         .text("NBA Player Salaries vs PER (2022-2023 Season)");
 
     // Load team logos
-    d3.csv("teams_logos.csv").then(function(logoData) {
-        const logoMap = new Map(logoData.map(d => [d.team, d.nba_team_imageURL]));
+// Load team logos
+d3.csv("teams_logos.csv").then(function(logoData) {
+    const logoMap = new Map(logoData.map(d => [d.team, d.nba_team_imageURL]));
 
-        // Create team logo checkboxes
-        const logoContainer = d3.select("#bar-chart")
-            .append("div")
+    // Sort teams alphabetically
+    const sortedTeams = data.teams.sort((a, b) => a.team.localeCompare(b.team));
+
+    // Create team logo checkboxes
+    const logoContainer = d3.select("#bar-chart")
+        .append("div")
+        .style("display", "flex")
+        .style("flex-wrap", "wrap")
+        .style("justify-content", "center")
+        .style("margin-top", "20px");
+
+    sortedTeams.forEach(team => {
+        const logoDiv = logoContainer.append("div")
+            .style("margin", "5px")
+            .style("text-align", "center")
             .style("display", "flex")
-            .style("flex-wrap", "wrap")
-            .style("justify-content", "center")
-            .style("margin-top", "20px");
+            .style("flex-direction", "column")
+            .style("align-items", "center");
 
-        data.teams.forEach(team => {
-            const logoDiv = logoContainer.append("div")
-                .style("margin", "5px")
-                .style("text-align", "center");
+        logoDiv.append("img")
+            .attr("src", logoMap.get(team.team))
+            .attr("width", "60")
+            .attr("height", "40");
 
-            logoDiv.append("img")
-                .attr("src", logoMap.get(team.team))
-                .attr("width", "30")
-                .attr("height", "30");
+        logoDiv.append("span")
+            .text(team.team)
+            .style("font-size", "12px")
+            .style("margin-top", "2px");
 
-            logoDiv.append("input")
-                .attr("type", "checkbox")
-                .attr("id", `checkbox-${team.team}`)
-                .attr("checked", teamVisibility[team.team] ? true : null)
-                .on("change", function() {
-                    teamVisibility[team.team] = this.checked;
-                    updateChart();
-                });
-        });
-
-        updateChart();
-    }).catch(function(error) {
-        console.log("Error loading the logo CSV file:", error);
+        logoDiv.append("input")
+            .attr("type", "checkbox")
+            .attr("id", `checkbox-${team.team}`)
+            .attr("checked", teamVisibility[team.team] ? true : null)
+            .on("change", function() {
+                teamVisibility[team.team] = this.checked;
+                updateChart();
+            });
     });
 
+    updateChart();
+}).catch(function(error) {
+    console.log("Error loading the logo CSV file:", error);
+});
     console.log("Finished rendering player salaries vs PER");
 }

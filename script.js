@@ -7,9 +7,27 @@ import { setCurrentScene, data, rankingsData } from './main.js';
 function processData(csvData, rankingsData) {
     let teamTotals = {};
     let players = csvData.map(d => {
+        // Convert numeric fields to numbers
         d.Salary = parseFloat(d.Salary);
         d.PER = parseFloat(d.PER);
         d.Age = parseInt(d.Age);
+        d.GP = parseInt(d.GP);
+        d.GS = parseInt(d.GS);
+        d.MP = parseFloat(d.MP);
+        d.PTS = parseFloat(d.PTS);
+        d.TRB = parseFloat(d.TRB);
+        d.AST = parseFloat(d.AST);
+        d.STL = parseFloat(d.STL);
+        d.BLK = parseFloat(d.BLK);
+        d['FG%'] = parseFloat(d['FG%']);
+        d['3P%'] = parseFloat(d['3P%']);
+        d['FT%'] = parseFloat(d['FT%']);
+        d['TS%'] = parseFloat(d['TS%']);
+        d['USG%'] = parseFloat(d['USG%']);
+        d.WS = parseFloat(d.WS);
+        d.BPM = parseFloat(d.BPM);
+        d.VORP = parseFloat(d.VORP);
+
         d.Team = d.Team.split('/').pop().trim();
         
         if (!teamTotals[d.Team]) {
