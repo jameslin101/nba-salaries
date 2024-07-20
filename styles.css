@@ -34,3 +34,68 @@
 .tooltip-table tr:nth-child(even) {
   background-color: #f9f9f9;
 }
+
+
+.scene-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.scene-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #f0f0f0;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.scene-button.active {
+    background-color: #4CAF50;
+    color: white;
+    border-color: #45a049;
+}
+
+.scene-button:hover:not(.active) {
+    background-color: #e0e0e0;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-button {
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    background-color: #008CBA;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.nav-button:hover:not(:disabled) {
+    background-color: #007B9A;
+}
+
+.nav-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+#player-stats-table {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+#player-stats-table .player-name-cell {
+  min-width: 100px;  /* Adjust this value as needed */
+  max-width: 1800px;  /* Adjust this value as needed */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

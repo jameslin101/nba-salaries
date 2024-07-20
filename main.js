@@ -8,6 +8,15 @@ let rankingsData;
 
 function setCurrentScene(newScene) {
     currentScene = newScene;
+    updateButtonStates();
+}
+
+function updateButtonStates() {
+    document.querySelectorAll('.scene-button').forEach((btn, index) => {
+        btn.classList.toggle('active', index + 1 === currentScene);
+    });
+    document.getElementById('prevButton').disabled = currentScene === 1;
+    document.getElementById('nextButton').disabled = currentScene === 3;
 }
 
 // Load and process the data
@@ -26,11 +35,24 @@ Promise.all([
 
 // Add event listeners to buttons
 document.addEventListener('DOMContentLoaded', (event) => {
-    document.getElementById('scene1').addEventListener('click', () => showScene(1));
-    document.getElementById('scene2').addEventListener('click', () => showScene(2));
-    document.getElementById('scene3').addEventListener('click', () => showScene(3));
-    document.getElementById('scene4').addEventListener('click', () => showScene(4));
+    document.querySelectorAll('.scene-button').forEach((btn, index) => {
+        btn.addEventListener('click', () => showScene(index + 1));
+    });
+
+    document.getElementById('prevButton').addEventListener('click', () => {
+        if (currentScene > 1) showScene(currentScene - 1);
+    });
+
+    document.getElementById('nextButton').addEventListener('click', () => {
+        if (currentScene < 3) showScene(currentScene + 1);
+    });
+
     document.getElementById('back-to-salaries').addEventListener('click', () => showScene(1));
+
+    // Initialize button states
+    updateButtonStates();
 });
+
+
 
 export { currentScene, setCurrentScene, data, rankingsData, colors };

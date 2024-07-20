@@ -1,5 +1,4 @@
 import { data } from './main.js';
-import { showScene } from './script.js';
 
 export function renderSalaryVsPerformance() {
     console.log("Rendering salary vs performance");
@@ -68,7 +67,7 @@ export function renderSalaryVsPerformance() {
                 .attr("y", d => y(d.winPercentage) - logoSize/2)
                 .on("click", function(event, d) {
                     console.log("Logo clicked:", d);
-                    showScene(5, d);
+                    displayPlayerStats(d);
                 })
                 .on("mouseover", function(event, d) {
                     tooltip.transition()
@@ -160,7 +159,7 @@ export function renderSalaryVsPerformance() {
                 Win %: ${(d.winPercentage * 100).toFixed(1)}%<br/>
                 Total Salary: $${(d.totalSalary / 1000000).toFixed(2)}M<br/>
                 ${performanceText} by ${Math.abs(difference * 100).toFixed(1)}%<br/>
-                Click for salary breakdown
+                Click for player stats
             `);
         }
 
@@ -237,4 +236,122 @@ export function renderSalaryVsPerformance() {
     }).catch(function(error) {
         console.log("Error loading the logo CSV file:", error);
     });
-}
+
+    function displayPlayerStats(teamData) {
+        // Remove existing table and container if any
+        d3.select("#player-stats-container").remove();
+    
+        // Create a new container for the table
+        const container = d3.select("#bar-chart")
+            .append("div")
+            .attr("id", "player-stats-container")
+            .style("margin-top", "20px")
+            .style("width", "100%")
+            .style("max-height", "400px")  // Adjust this value as needed
+            .style("overflow-y", "auto");
+    
+        // Create a new table inside the container
+        const table = container
+            .append("table")
+            .attr("id", "player-stats-table")
+            .style("width", "100%")
+            .style("border-collapse", "collapse");
+        
+        // Add table header
+        const thead = table.append("thead");
+        thead.append("tr")
+            .selectAll("th")
+            .data([
+                "Player Name", "Position", "Age", "Salary", "GP", "GS", "MP", "FG%", 
+                "3P%", "FT%", 
+                "AST", "STL", "BLK",  "PTS",
+                "PER", 
+                 "WS", "BPM", "VORP"
+            ])
+            .enter()
+            .append("th")
+            .attr("class", (d, i) => i === 0 ? "player-name-cell" : null)  // Add class to Player Name header
+            .text(d => d)
+            .style("background-color", "#f2f2f2")
+            .style("padding", "8px")
+            .style("border", "1px solid #ddd")
+            .style("position", "sticky")
+            .style("top", "0")
+            .style("z-index", "10")
+            .style("font-size", "12px");
+
+        // Add table body
+        const tbody = table.append("tbody");
+        const rows = tbody.selectAll("tr")
+            .data(teamData.players)
+            .enter()
+            .append("tr");
+    
+        const formatValue = (value, isPercentage = false) => {
+            if (typeof value === 'number') {
+                return isPercentage ? (value * 100).toFixed(1) + '%' : value.toFixed(1);
+            }
+            return 'N/A';
+        };
+    
+        rows.selectAll("td")
+            .data(d => [
+                d['Player Name'], d.Position, d.Age, 
+                `$${(d.Salary / 1000000).toFixed(2)}M`, 
+                d.GP, d.GS, formatValue(d.MP), 
+                formatValue(d['FG%'], true),
+                formatValue(d['3P%'], true),
+                formatValue(d['FT%'], true),
+                formatValue(d.AST), formatValue(d.STL), formatValue(d.BLK), 
+                formatValue(d.PTS),
+                formatValue(d.PER), 
+                formatValue(d.WS), 
+                formatValue(d.BPM), 
+                formatValue(d.VORP)
+            ])
+            .enter()
+            .append("td")
+            .attr("class", (d, i) => i === 0 ? "player-name-cell" : null)  // Add class to Player Name cell
+            .text(d => d)
+            .style("padding", "8px")
+            .style("border", "1px solid #ddd")
+            .style("font-size", "10px");
+    
+        // Add team name as caption
+        table.append("caption")
+            .text(`${teamData.teamFullName} Player Stats`)
+            .style("font-weight", "bold")
+            .style("font-size", "14px")
+            .style("margin-bottom", "10px");
+    
+        // Alternating row colors
+        rows.style("background-color", (d, i) => i % 2 === 0 ? "#f9f9f9" : "white");
+    
+        // Add tooltips for stat explanations
+        const statExplanations = {
+            'PER': 'Player Efficiency Rating',
+            'TS%': 'True Shooting Percentage',
+            '3PAr': '3-Point Attempt Rate',
+            'FTr': 'Free Throw Rate',
+            'ORB%': 'Offensive Rebound Percentage',
+            'DRB%': 'Defensive Rebound Percentage',
+            'TRB%': 'Total Rebound Percentage',
+            'AST%': 'Assist Percentage',
+            'STL%': 'Steal Percentage',
+            'BLK%': 'Block Percentage',
+            'TOV%': 'Turnover Percentage',
+            'USG%': 'Usage Percentage',
+            'OWS': 'Offensive Win Shares',
+            'DWS': 'Defensive Win Shares',
+            'WS': 'Win Shares',
+            'WS/48': 'Win Shares per 48 minutes',
+            'OBPM': 'Offensive Box Plus/Minus',
+            'DBPM': 'Defensive Box Plus/Minus',
+            'BPM': 'Box Plus/Minus',
+            'VORP': 'Value Over Replacement Player'
+        };
+    
+        thead.selectAll("th")
+            .append("title")
+            .text(d => statExplanations[d] || d);
+    }}

@@ -10,6 +10,7 @@
     <script type="module" src="script.js"></script>
     <script type="module" src="scene1.js"></script>    
     <script type="module" src="scene2.js"></script>    
+    <script type="module" src="scene3.js"></script>    
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -41,11 +42,16 @@
 <body>
     <h1 id="nba-salary-visualization-2022-2023-season" style="text-align: center;">NBA Salary Visualization (2022-2023 Season)</h1>
 
-    <div id="navigation" style="text-align: center; display: flex; justify-content: center; gap: 10px;">
-        <button id="scene1">Team Salaries</button>
-        <button id="scene2">Salary vs Performance</button>
-        <button id="scene3">Player Salaries</button>
-        <button id="scene4">Team Salary Distribution</button>
+    <div id="navigation" style="text-align: center; display: flex; flex-direction: column; align-items: center; gap: 20px; margin-bottom: 20px;">
+        <div class="scene-buttons">
+            <button id="scene1" class="scene-button active">Team Salaries</button>
+            <button id="scene2" class="scene-button">Team Salaries vs Performance</button>
+            <button id="scene3" class="scene-button">Player Salaries vs Performance</button>
+        </div>
+        <div class="nav-buttons">
+            <button id="prevButton" class="nav-button" disabled>Previous</button>
+            <button id="nextButton" class="nav-button">Next</button>
+        </div>
     </div>
 
     <div class="chart-container" style="text-align: center;">
