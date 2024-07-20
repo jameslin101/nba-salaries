@@ -197,55 +197,52 @@ export function renderPlayerSalariesVsPER() {
 
     // Add radio buttons for Y-axis metric selection
     const metrics = [
-        { value: 'PER', label: 'Player Efficiency Rating' },
-        { value: 'WS', label: 'Win Shares' },
-        { value: 'BPM', label: 'Box Plus/Minus' },
-        { value: 'VORP', label: 'Value Over Replacement Player' }
+        { value: 'PER', label: 'Player Efficiency Rating', description: 'A measure of per-minute production standardized such that the league average is 15.' },
+        { value: 'WS', label: 'Win Shares', description: 'An estimate of the number of wins contributed by a player.' },
+        { value: 'BPM', label: 'Box Plus/Minus', description: 'A box score estimate of the points per 100 possessions a player contributed above a league-average player, translated to an average team.' },
+        { value: 'VORP', label: 'Value Over Replacement Player', description: 'A box score estimate of the points per 100 team possessions that a player contributed above a replacement-level player, translated to an average team and prorated to an 82-game season.' }
     ];
 
     const radioContainer = d3.select("#bar-chart")
         .insert("div", ":first-child")
-        .style("display", "flex")
-        .style("flex-direction", "column")
-        .style("align-items", "center")
+        .attr("class", "radio-container")
         .style("margin-bottom", "20px");
 
     radioContainer.append("span")
         .text("Advanced Metric:")
-        .style("margin-bottom", "10px")
-        .style("font-weight", "bold");
+        .style("font-weight", "bold")
 
     const radioButtonsContainer = radioContainer.append("div")
-        .style("display", "flex")
-        .style("justify-content", "center")
-        .style("flex-wrap", "wrap");
+        .attr("class", "radio-buttons-container");
 
     const radioButtons = radioButtonsContainer.selectAll("label")
         .data(metrics)
         .enter()
         .append("label")
-        .style("margin", "0 10px 5px 10px")
-        .style("display", "flex")
-        .style("align-items", "center")
+        .attr("title", d => d.description)
+        .attr("class", d => d.value === currentMetric ? "selected" : "")
         .text(d => d.label)
         .append("input")
         .attr("type", "radio")
         .attr("name", "metric")
         .attr("value", d => d.value)
         .property("checked", d => d.value === currentMetric)
-        .style("margin-right", "5px")
         .on("change", function(event, d) {
             currentMetric = d.value;
+            radioButtonsContainer.selectAll("label")
+                .classed("selected", e => e.value === currentMetric);
             updateChart();
         });
-
-    // Move the input before the label text
+    
+    // Move the input before the label text and wrap the text in a span
     radioButtonsContainer.selectAll("label")
         .each(function() {
             const label = d3.select(this);
             const input = label.select("input");
-            label.text(metrics.find(m => m.value === input.attr("value")).label);
-            label.insert(() => input.node(), ":first-child");
+            const text = label.text();
+            label.text(null);
+            label.append(() => input.node());
+            label.append("span").text(text);
         });
 
     // Load team logos
@@ -261,7 +258,7 @@ export function renderPlayerSalariesVsPER() {
             .style("display", "flex")
             .style("flex-wrap", "wrap")
             .style("justify-content", "center")
-            .style("margin-top", "20px");
+            .style("margin-top", "-50px");
 
         sortedTeams.forEach(team => {
             const logoDiv = logoContainer.append("div")

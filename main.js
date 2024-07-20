@@ -19,6 +19,7 @@ function updateButtonStates() {
     document.getElementById('nextButton').disabled = currentScene === 3;
 }
 
+
 // Load and process the data
 Promise.all([
     d3.csv("nba_2022-23_all_stats_with_salary.csv"),

@@ -45,26 +45,45 @@ export function renderSalaryVsPerformance() {
         function updateChart() {
             x.domain([0, d3.max(data.teams, d => d.totalSalary / 1000000)]);
             y.domain([0, d3.max(data.teams, d => d.winPercentage)]);
-
+        
             xAxis.transition().duration(750)
                 .call(d3.axisBottom(x).tickFormat(d => `$${d}M`));
-
+        
             yAxis.transition().duration(750)
                 .call(d3.axisLeft(y).tickFormat(d => `${(d * 100).toFixed(0)}%`));
-
+        
             const logoSize = 30;
-
-            const logos = svg.selectAll(".team-logo")
-                .data(data.teams, d => d.team);
-
-            logos.enter()
-                .append("image")
+        
+            // Remove existing logos
+            svg.selectAll(".team-logo-group").remove();
+        
+            // Create new logo groups
+            const logoGroups = svg.selectAll(".team-logo-group")
+                .data(data.teams, d => d.team)
+                .enter()
+                .append("g")
+                .attr("class", "team-logo-group");
+        
+            logoGroups.append("image")
                 .attr("class", "team-logo")
                 .attr("xlink:href", d => logoMap.get(d.team))
                 .attr("width", logoSize)
                 .attr("height", logoSize)
-                .attr("x", d => x(d.totalSalary / 1000000) - logoSize/2)
-                .attr("y", d => y(d.winPercentage) - logoSize/2)
+                .attr("x", -logoSize / 2)
+                .attr("y", -logoSize / 2);
+        
+            // Set up force simulation
+            const simulation = d3.forceSimulation(data.teams)
+                .force("x", d3.forceX(d => x(d.totalSalary / 1000000)).strength(0.2))
+                .force("y", d3.forceY(d => y(d.winPercentage)).strength(0.2))
+                .force("collide", d3.forceCollide().radius(logoSize / 2 + 2).iterations(4))
+                .on("tick", ticked);
+        
+            function ticked() {
+                logoGroups.attr("transform", d => `translate(${d.x},${d.y})`);
+            }
+        
+            logoGroups
                 .on("click", function(event, d) {
                     console.log("Logo clicked:", d);
                     displayPlayerStats(d);
@@ -76,39 +95,27 @@ export function renderSalaryVsPerformance() {
                     updateTooltipContent(d);
                     tooltip.style("left", (event.pageX + 10) + "px")
                            .style("top", (event.pageY - 10) + "px");
-                    d3.select(this)
+                    d3.select(this).select("image")
                         .transition()
                         .duration(200)
                         .attr("width", logoSize * 1.5)
                         .attr("height", logoSize * 1.5)
-                        .attr("x", d => x(d.totalSalary / 1000000) - logoSize*1.5/2)
-                        .attr("y", d => y(d.winPercentage) - logoSize*1.5/2);
+                        .attr("x", -logoSize * 1.5 / 2)
+                        .attr("y", -logoSize * 1.5 / 2);
                 })
                 .on("mouseout", function(d) {
                     tooltip.transition()
                         .duration(500)
                         .style("opacity", 0);
-                    d3.select(this)
+                    d3.select(this).select("image")
                         .transition()
                         .duration(200)
                         .attr("width", logoSize)
                         .attr("height", logoSize)
-                        .attr("x", d => x(d.totalSalary / 1000000) - logoSize/2)
-                        .attr("y", d => y(d.winPercentage) - logoSize/2);
+                        .attr("x", -logoSize / 2)
+                        .attr("y", -logoSize / 2);
                 });
-
-            logos.transition()
-                .duration(750)
-                .attr("x", d => x(d.totalSalary / 1000000) - logoSize/2)
-                .attr("y", d => y(d.winPercentage) - logoSize/2);
-
-            logos.exit()
-                .transition()
-                .duration(750)
-                .attr("width", 0)
-                .attr("height", 0)
-                .remove();
-
+        
             // Calculate and draw regression line
             const regression = calculateRegression(data.teams);
             
@@ -123,7 +130,7 @@ export function renderSalaryVsPerformance() {
                 .attr("stroke", "black")
                 .attr("stroke-width", 2)
                 .attr("stroke-dasharray", "5,5");
-
+        
             // Add annotation to regression line
             svg.append("text")
                 .attr("class", "regression-annotation")
@@ -135,17 +142,17 @@ export function renderSalaryVsPerformance() {
                 .text("Expected performance")
                 .attr("fill", "black")
                 .attr("font-size", "12px");
-
+        
             svg.select(".chart-title")
                 .text("NBA Team Salary vs Performance (2022-2023 Season)");
-
+        
             svg.select(".x-axis-label")
                 .text("Total Salary (Millions)");
-
+        
             svg.select(".y-axis-label")
                 .text("Win Percentage");
+        
         }
-
         function updateTooltipContent(d) {
             const expectedWinPercentage = calculateExpectedWinPercentage(d.totalSalary / 1000000);
             const difference = d.winPercentage - expectedWinPercentage;
@@ -265,8 +272,6 @@ export function renderSalaryVsPerformance() {
                 "Player Name", "Position", "Age", "Salary", "GP", "GS", "MP", "FG%", 
                 "3P%", "FT%", 
                 "AST", "STL", "BLK",  "PTS",
-                "PER", 
-                 "WS", "BPM", "VORP"
             ])
             .enter()
             .append("th")
@@ -304,10 +309,6 @@ export function renderSalaryVsPerformance() {
                 formatValue(d['FT%'], true),
                 formatValue(d.AST), formatValue(d.STL), formatValue(d.BLK), 
                 formatValue(d.PTS),
-                formatValue(d.PER), 
-                formatValue(d.WS), 
-                formatValue(d.BPM), 
-                formatValue(d.VORP)
             ])
             .enter()
             .append("td")

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NBA Salary Visualization (2022-2023 Season)</title>
+    <title>NBA Salary vs Performance Visualization (2022-2023 Season)</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script type="module" src="main.js"></script>
@@ -40,7 +40,7 @@
     </style>
 </head>
 <body>
-    <h1 id="nba-salary-visualization-2022-2023-season" style="text-align: center;">NBA Salary Visualization (2022-2023 Season)</h1>
+    <h1 id="nba-salary-visualization-2022-2023-season" style="text-align: center;">NBA Salary vs Performance Visualization (2022-2023 Season)</h1>
 
     <div id="navigation" style="text-align: center; display: flex; flex-direction: column; align-items: center; gap: 20px; margin-bottom: 20px;">
         <div class="scene-buttons">
@@ -55,6 +55,47 @@
     </div>
 
     <div class="chart-container" style="text-align: center;">
+        <div class="scene1-notes">
+            <p>
+                In this Interactive Slideshow, we will explore the salaries and performance of NBA teams and players in the 2022-2023 season.
+                <br><br>
+                The first slide ranks the salaries of the NBA teams, with a horizontal line indicating the salary cap.
+                <br><br>
+                The NBA uses a soft salary cap - the more a team goes over, the stiffer the financial penalties. Typically, teams will try not to go over unless they are aiming to win a championship.
+                <br><br>
+                You can click on a bar to get a pioe chart breakdown of each player's salary as a percentage of the team's total.
+                <br><br>
+                You can also hover over a bar to see details on the team's actual performance, but we will explore that more in the next slide.
+            </p>
+        </div>
+        <div class="scene2-notes">
+            <p>
+                Below is a plot showing the correlation between Team Salary and Win Percentage. 
+                <br><br>
+                Although teams that spend more money on their players generally perform better, it is not guaranteed. You can see both the top spending teams - the Golden State Warriors and L.A. Clippers both underperform expectations.
+                <br><br>
+                The Memphis Grizzlies outperformed expectations the most, while the Detroit Pistons underperformed the most.
+                <br><br>
+                Click on the team logos to see the team's detailed player name, position, salary, and stats breakdown.
+                <br><br>
+                Next, we will visualize players based on their advanced analytics stats.
+            </p>
+        </div>  
+        <div class="scene3-notes">
+            <p>
+                Below is a plot showing the correlation between player salary and performance according to various advanced metrics stats.
+                <br><br>
+                Please click on a team below the plot to show the scatter plot of their players' advanced metrics. (Try starting with the 2022-23 champions, the Denver Nuggets.)
+                <br><br>
+                You can visually compare the talent on each team. Each team's dots are colored based on the team's primary color.
+                <br><br>
+                You can hover over a dot to see more details on a player. Near the top of the plots, you can often find Nicola Jokic, a 3x MVP, although Joel Embiid was the MVP for the 2022-23 season. 
+                <br><br>
+                You can also click on multiple teams and see how their players stack up against each other. Each dot is color coded by team.
+                <br><br>
+                Below is a set of radio buttons that allows you to switch between different advanced metrics. Hover over a button for a description of the metric.
+            </p>   
+        </div>
         <div id="bar-chart"></div>
         <div id="pie-chart"></div>
     </div>

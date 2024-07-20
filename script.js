@@ -4,6 +4,15 @@ import { renderPlayerSalariesVsPER } from './scene3.js';
 
 import { setCurrentScene, data, rankingsData } from './main.js';
 
+
+function showNotes(sceneNumber) {
+    // Hide all notes
+    d3.selectAll(".scene1-notes, .scene2-notes, .scene3-notes").style("display", "none");
+    
+    // Show notes for current scene
+    d3.select(`.scene${sceneNumber}-notes`).style("display", "block");
+}
+
 function processData(csvData, rankingsData) {
     let teamTotals = {};
     let players = csvData.map(d => {
@@ -67,6 +76,8 @@ function showScene(sceneNumber, teamData = null) {
     d3.select("#bar-chart").style("display", "none");
     d3.select("#pie-chart").style("display", "none");
     d3.select("#back-button").style("display", "none");
+
+    showNotes(sceneNumber);  // Add this line
 
     switch(sceneNumber) {
         case 1:
